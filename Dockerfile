@@ -1,8 +1,9 @@
-FROM buildpack-deps:stretch
+FROM buildpack-deps:bionic
 
 ARG GRPC_DIR=/grpc-web/third_party/grpc
-ARG PROTO_LIB=$GRPC_DIR/third_party/protobuf/src/.libs
 ARG GRPC_LIB=$GRPC_DIR/libs/opt
+ARG PROTO_DIR=$GRPC_DIR/third_party/protobuf
+ARG PROTO_LIB=$PROTO_DIR/src/.libs
 
 RUN groupadd -r nginx && useradd -r -d /var/cache/nginx -s /sbin/nologin -g nginx nginx
 RUN git clone --branch 1.0.3 https://github.com/grpc/grpc-web /grpc-web \
@@ -11,12 +12,12 @@ RUN git clone --branch 1.0.3 https://github.com/grpc/grpc-web /grpc-web \
     && git submodule update --init -- third_party/nginx/src
 
 RUN cd $GRPC_DIR && make install
-RUN cd $GRPC_DIR/third_party/protobuf && make install
+RUN cd $PROTO_DIR && make install
 
 RUN cd /grpc-web && make protos
 RUN cd /grpc-web/third_party/nginx/src \
     && LD_LIBRARY_PATH="-L$PROTO_LIB:$GRPC_LIB" \
-    && auto/configure \
+    auto/configure \
     --prefix=/etc/nginx \
     --sbin-path=/usr/sbin/nginx \
     --modules-path=/usr/lib/nginx/modules \
@@ -47,7 +48,7 @@ RUN cd /grpc-web/third_party/nginx/src \
     --with-http_ssl_module \
     --with-http_v2_module \
     --with-debug \
-    --with-cc-opt="-I /usr/local/include -I /grpc-web -I $GRPC_DIR -I $GRPC_DIR/include -I $GRPC_DIR/third_party/protobuf/src -I $GRPC_DIR/third_party/protobuf/include" \
+    --with-cc-opt="-I /usr/local/include -I /grpc-web -I $GRPC_DIR -I $GRPC_DIR/include -I $PROTO_DIR/src -I $PROTO_DIR/include -Wno-error" \
     --with-ld-opt="-L$PROTO_LIB -L$GRPC_LIB -l:libgrpc++.a -l:libgrpc.a -l:libprotobuf.a -lpthread -ldl -lrt -lstdc++ -lm" \
     --add-module="/grpc-web/net/grpc/gateway/nginx" \
     && make \
