@@ -10,9 +10,17 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "helloworld.HelloReply" do
     optional :message, :string, 1
   end
+  add_message "helloworld.CountRequest" do
+    optional :n, :int64, 1
+  end
+  add_message "helloworld.CountResponse" do
+    optional :count, :int64, 1
+  end
 end
 
 module Helloworld
   HelloRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("helloworld.HelloRequest").msgclass
   HelloReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("helloworld.HelloReply").msgclass
+  CountRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("helloworld.CountRequest").msgclass
+  CountResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("helloworld.CountResponse").msgclass
 end

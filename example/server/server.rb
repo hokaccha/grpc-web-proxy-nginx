@@ -5,6 +5,15 @@ class GreeterServer < Helloworld::Greeter::Service
   def say_hello(req, call)
     Helloworld::HelloReply.new(message: "Hello #{req.name}")
   end
+
+  def count_stream(req, call)
+    Enumerator.new do |y|
+      req.n.times do |i|
+        sleep 0.5
+        y << Helloworld::CountResponse.new(count: i)
+      end
+    end
+  end
 end
 
 s = GRPC::RpcServer.new

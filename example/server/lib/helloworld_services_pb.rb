@@ -15,6 +15,7 @@ module Helloworld
       self.service_name = 'helloworld.Greeter'
 
       rpc :SayHello, HelloRequest, HelloReply
+      rpc :CountStream, CountRequest, stream(CountResponse)
     end
 
     Stub = Service.rpc_stub_class

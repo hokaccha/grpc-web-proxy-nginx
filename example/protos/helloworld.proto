@@ -4,6 +4,7 @@ package helloworld;
 
 service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+  rpc CountStream (CountRequest) returns (stream CountResponse) {}
 }
 
 message HelloRequest {
@@ -12,4 +13,12 @@ message HelloRequest {
 
 message HelloReply {
   string message = 1;
+}
+
+message CountRequest {
+  int64 n = 1;
+}
+
+message CountResponse {
+  int64 count = 1;
 }

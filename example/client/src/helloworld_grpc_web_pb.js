@@ -128,5 +128,55 @@ proto.helloworld.GreeterPromiseClient.prototype.sayHello =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.helloworld.CountRequest,
+ *   !proto.helloworld.CountResponse>}
+ */
+const methodInfo_CountStream = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.helloworld.CountResponse,
+  /** @param {!proto.helloworld.CountRequest} request */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.helloworld.CountResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.helloworld.CountRequest} request The request proto
+ * @param {!Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.helloworld.CountResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.helloworld.GreeterClient.prototype.countStream =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/helloworld.Greeter/CountStream',
+      request,
+      metadata,
+      methodInfo_CountStream);
+};
+
+
+/**
+ * @param {!proto.helloworld.CountRequest} request The request proto
+ * @param {!Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.helloworld.CountResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.helloworld.GreeterPromiseClient.prototype.countStream =
+    function(request, metadata) {
+  return this.delegateClient_.client_.serverStreaming(this.delegateClient_.hostname_ +
+      '/helloworld.Greeter/CountStream',
+      request,
+      metadata,
+      methodInfo_CountStream);
+};
+
+
 module.exports = proto.helloworld;
 
