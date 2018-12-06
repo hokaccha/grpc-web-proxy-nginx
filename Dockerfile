@@ -5,7 +5,7 @@ ARG GRPC_LIB=$GRPC_DIR/libs/opt
 ARG PROTO_DIR=$GRPC_DIR/third_party/protobuf
 ARG PROTO_LIB=$PROTO_DIR/src/.libs
 
-RUN apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache \
     autoconf \
     automake \
     g++ \
@@ -18,6 +18,7 @@ RUN apk add --no-cache --virtual .build-deps \
     make \
     openssl-dev \
     pcre-dev \
+    tzdata \
     zlib-dev \
  && git clone --branch 1.0.3 https://github.com/grpc/grpc-web /grpc-web \
  && cd /grpc-web \
@@ -65,8 +66,7 @@ RUN apk add --no-cache --virtual .build-deps \
     --add-module="/grpc-web/net/grpc/gateway/nginx" \
  && make \
  && make install \
- && rm -rf /grpc-web \
- && apk del .build-deps
+ && rm -rf /grpc-web
 
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
  && ln -sf /dev/stderr /var/log/nginx/error.log

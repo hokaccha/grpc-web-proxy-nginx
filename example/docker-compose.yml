@@ -1,0 +1,24 @@
+version: '3'
+services:
+  client:
+    build:
+      context: client
+      dockerfile: Dockerfile
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./client/src:/app/src
+
+  app:
+    build:
+      context: server
+      dockerfile: Dockerfile
+
+  nginx:
+    image: hokaccha/grpc-web-proxy-nginx:latest
+    depends_on:
+      - app
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./config/grpc_proxy.conf:/etc/nginx/conf.d/grpc_proxy.conf
