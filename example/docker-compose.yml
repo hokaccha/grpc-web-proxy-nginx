@@ -20,5 +20,6 @@ services:
       - app
     ports:
       - '8080:8080'
-    volumes:
-      - ./config/grpc_proxy.conf:/etc/nginx/conf.d/grpc_proxy.conf
+    command: /bin/sh -c "envsubst '$$NGINX_GRPC_PASS' < /etc/nginx/conf.d/grpc_proxy.conf.template > /etc/nginx/conf.d/grpc_proxy.conf && nginx -g 'daemon off;'"
+    environment:
+      NGINX_GRPC_PASS: 'app:8000'

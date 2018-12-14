@@ -71,7 +71,7 @@ RUN apk add --no-cache \
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
  && ln -sf /dev/stderr /var/log/nginx/error.log
 COPY config/nginx.conf /etc/nginx/nginx.conf
-COPY config/conf.d/grpc_proxy.conf /etc/nginx/conf.d/grpc_proxy.conf
+COPY config/conf.d/grpc_proxy.conf.template /etc/nginx/conf.d/grpc_proxy.conf.template
 
 STOPSIGNAL SIGTERM
 
